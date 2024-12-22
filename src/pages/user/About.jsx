@@ -56,7 +56,7 @@ const AboutPage = () => {
         {stats.map((stat) => (
           <div
             key={stat.id}
-            className="text-center p-6 bg-white rounded-lg shadow-lg transform transition-all duration-500 hover:scale-105"
+            className="text-center p-6 bg-white rounded-lg shadow-lg transform transition-all duration-500 hover:scale-105 border-t-4 border-orange-500"
           >
             <div className="flex justify-center mb-4">{stat.icon}</div>
             <div className="font-bold text-2xl mb-2">
@@ -76,7 +76,7 @@ const AboutPage = () => {
 
       {/* Mission & Vision */}
       <div className="grid md:grid-cols-2 gap-12 mb-16">
-        <div className="bg-white p-8 rounded-lg shadow-lg">
+        <div className="bg-white p-8 rounded-lg shadow-lg border-t-4 border-orange-500">
           <h2 className="text-2xl font-bold mb-4">Misyonumuz</h2>
           <p className="text-gray-600">
             Yolcularımıza en güvenli, konforlu ve ekonomik seyahat deneyimini
@@ -84,7 +84,7 @@ const AboutPage = () => {
             standardını korumak ve sürekli geliştirmek.
           </p>
         </div>
-        <div className="bg-white p-8 rounded-lg shadow-lg">
+        <div className="bg-white p-8 rounded-lg shadow-lg border-t-4 border-orange-500">
           <h2 className="text-2xl font-bold mb-4">Vizyonumuz</h2>
           <p className="text-gray-600">
             Türkiye'nin lider online otobüs bileti platformu olmak. Teknolojik

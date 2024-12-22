@@ -174,6 +174,12 @@ const Biletler = () => {
         const date = tarih?.toDate ? tarih.toDate() : new Date(tarih);
         return dayjs(date).format("DD.MM.YYYY HH:mm");
       },
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => {
+        const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+        const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+        return dateA - dateB;
+      }
     },
     {
       title: "İşlemler",
@@ -303,6 +309,8 @@ const Biletler = () => {
           rowKey="id"
           loading={loading}
           scroll={{ x: true }}
+          defaultSortOrder="descend"
+          sortDirections={['descend', 'ascend']}
         />
       </Card>
 

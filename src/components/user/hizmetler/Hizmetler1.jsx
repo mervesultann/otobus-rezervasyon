@@ -48,7 +48,7 @@ const Hizmetler1 = () => {
         {services.map((service) => (
           <div 
             key={service.id} 
-            className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+            className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-t-4 border-orange-500"
           >
             <div className="flex justify-center mb-4">
               {service.icon}

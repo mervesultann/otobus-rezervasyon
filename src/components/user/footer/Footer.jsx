@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaPhone, FaEnvelope, FaLocationDot, FaXTwitter, FaInstagram } from "react-icons/fa6";
 import { LuFacebook } from "react-icons/lu";
-
+import logo from "/logo.svg";
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-300">
@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Şirket Bilgileri */}
           <div className="space-y-4">
-            <h3 className="text-white text-lg font-semibold mb-4">Seferbul</h3>
+          <Link to="/"> <img src={logo} alt="Seferbul Logo" className="w-40 h-auto" /> </Link>
             <p className="text-sm">
               Türkiye'nin önde gelen online otobüs bileti satış platformu. Güvenli ve kolay yolculuk deneyimi için yanınızdayız.
             </p>

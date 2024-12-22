@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMessages, updateMessage } from "../../../redux/slices/messageSlice";
+import {
+  fetchMessages,
+  updateMessage,
+} from "../../../redux/slices/messageSlice";
 import { Table, Tag, Button, Modal, Card, Tooltip, Badge } from "antd";
 import {
   EyeOutlined,
@@ -70,6 +73,12 @@ const ContactMessage = () => {
       dataIndex: "createdAt",
       key: "createdAt",
       render: (date) => dayjs(date).format("DD.MM.YYYY HH:mm"),
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => {
+        const dateA = dayjs(a.createdAt);
+        const dateB = dayjs(b.createdAt);
+        return dateA.valueOf() - dateB.valueOf();
+      }
     },
     {
       title: "Durum",
@@ -133,6 +142,8 @@ const ContactMessage = () => {
             showSizeChanger: true,
             showTotal: (total) => `Toplam ${total} mesaj`,
           }}
+          defaultSortOrder="ascend'"
+          sortDirections={['descend', 'ascend']}
         />
       </Card>
 
@@ -176,7 +187,7 @@ const ContactMessage = () => {
                 </p>
               </div>
               <div>
-                <p className="text-gray-600">Durum:</p>
+                <p className="text-gray-600 mb-2">Durum:</p>
                 <Tag color={getStatusColor(selectedMessage.status)}>
                   {getStatusText(selectedMessage.status)}
                 </Tag>
