@@ -42,13 +42,12 @@ const Hizmetler1 = () => {
 
 
   return (
-    <div>
-
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {services.map((service) => (
           <div 
             key={service.id} 
-            className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-t-4 border-orange-500"
+            className="mx-auto w-full bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-t-4 border-orange-500 flex flex-col items-center justify-center"
           >
             <div className="flex justify-center mb-4">
               {service.icon}
@@ -62,8 +61,6 @@ const Hizmetler1 = () => {
           </div>
         ))}
       </div>
-
-
     </div>
   )
 }
