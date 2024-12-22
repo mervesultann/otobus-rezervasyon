@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Empty, message } from "antd";
+import { Table, Button, Empty, message, Card } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
+import { useMediaQuery } from "react-responsive";
 
 const SeferSonuclari = () => {
   const location = useLocation();
@@ -10,6 +11,7 @@ const SeferSonuclari = () => {
   const [seferler, setSeferler] = useState([]);
   const searchParams = location.state?.searchParams;
   const user = useSelector((state) => state.auth.user);
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
     if (!searchParams) {
@@ -32,6 +34,33 @@ const SeferSonuclari = () => {
     navigate(`/bilet-al/${seferId}`);
   };
 
+  const renderMobileCard = (sefer) => (
+    <Card className="mb-4 shadow-sm" key={sefer.id}>
+      <div className="space-y-2">
+        <div className="flex justify-between items-center">
+          <div className="font-semibold">{sefer.kalkis} - {sefer.varis}</div>
+          <div className="text-lg font-bold text-orange-500">₺{sefer.fiyat.toFixed(2)}</div>
+        </div>
+        <div className="flex justify-between text-gray-600">
+          <div>Tarih: {dayjs(sefer.tarih).format("DD.MM.YYYY")}</div>
+          
+        </div>
+        <div className="flex justify-between text-gray-600">
+          <div>Kalkış Saati: {sefer.kalkisSaati}</div>
+          <div>Varış Saati: {sefer.varisSaati}</div>
+        </div>
+        <Button
+          type="primary"
+          block
+          onClick={() => handleBiletAl(sefer.id)}
+          className="mt-4"
+        >
+          Bilet Al
+        </Button>
+      </div>
+    </Card>
+  );
+
   const columns = [
     {
       title: "Kalkış",
@@ -48,12 +77,9 @@ const SeferSonuclari = () => {
       dataIndex: "tarih",
       key: "tarih",
       render: (tarih) => dayjs(tarih).format("DD.MM.YYYY"),
+      responsive: ["md"],
     },
-    {
-      title: "Saat",
-      dataIndex: "saat",
-      key: "saat",
-    },
+   
     {
       title: "Fiyat",
       dataIndex: "fiyat",
@@ -64,11 +90,13 @@ const SeferSonuclari = () => {
       title: "Kalkış Saati",
       dataIndex: "kalkisSaati",
       key: "kalkisSaati",
+      responsive: ["lg"],
     },
     {
       title: "Varış Saati",
       dataIndex: "varisSaati",
       key: "varisSaati",
+      responsive: ["lg"],
     },
     {
       title: "İşlem",
@@ -98,12 +126,19 @@ const SeferSonuclari = () => {
         </div>
 
         {seferler.length > 0 ? (
-          <Table
-            columns={columns}
-            dataSource={seferler}
-            rowKey="id"
-            pagination={false}
-          />
+          isMobile ? (
+            <div className="space-y-4">
+              {seferler.map(renderMobileCard)}
+            </div>
+          ) : (
+            <Table
+              columns={columns}
+              dataSource={seferler}
+              rowKey="id"
+              pagination={false}
+              scroll={{ x: true }}
+            />
+          )
         ) : (
           <Empty
             description="Bu kriterlere uygun sefer bulunamadı"
