@@ -5,17 +5,24 @@ import { FaPhone, FaEnvelope, FaLocationDot } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { sendMessage } from "../../redux/slices/messageSlice";
 import toast from "react-hot-toast";
+import emailjs from "@emailjs/browser";
 
 const schema = yup.object().shape({
   name: yup.string().required("İsim alanı zorunludur"),
-  email: yup.string().email("Geçerli bir email giriniz").required("Email alanı zorunludur"),
+  email: yup
+    .string()
+    .email("Geçerli bir email giriniz")
+    .required("Email alanı zorunludur"),
   subject: yup.string().required("Konu alanı zorunludur"),
-  message: yup.string().required("Mesaj alanı zorunludur").min(10, "Mesaj en az 10 karakter olmalıdır"),
+  message: yup
+    .string()
+    .required("Mesaj alanı zorunludur")
+    .min(10, "Mesaj en az 10 karakter olmalıdır"),
 });
 
 const ContactPage = () => {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.messages);
+  const { loading } = useSelector((state) => state.messages);
 
   const {
     register,
@@ -28,17 +35,39 @@ const ContactPage = () => {
 
   const onSubmit = async (data) => {
     try {
+      // Firebase'e kaydet
       await dispatch(sendMessage(data)).unwrap();
+
+      // EmailJS ile mail gönder
+      try {
+        await emailjs.send(
+          "service_t7sdewg", // EmailJS Service ID
+          "template_5j7pevv", // EmailJS Template ID
+          {
+            from_name: data.name,
+            from_email: data.email,
+            subject: data.subject,
+            message: data.message,
+          },
+          "OjA-ldO2mo-Pmy7tf" // EmailJS Public Key
+        );
+      } catch (emailError) {
+        console.error("Email gönderme hatası:", emailError);
+       
+      }
+
+      toast.success("Mesajınız başarıyla gönderildi!");
       reset();
     } catch (error) {
       console.error("Mesaj gönderme hatası:", error);
+      toast.error("Mesaj gönderilirken bir hata oluştu");
     }
   };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl ">
       <h1 className="text-3xl font-bold text-center mb-12">Bize Ulaşın</h1>
-      
+
       <div className="  grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 mx-auto flex justify-center items-center">
         <div className="space-y-8">
           <div className="flex items-center space-x-4">
@@ -50,7 +79,7 @@ const ContactPage = () => {
               <p className="text-gray-600">+90 532 123 45 67</p>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <div className="bg-orange-500 p-4 rounded-full">
               <FaEnvelope className="text-white text-xl" />
@@ -60,14 +89,18 @@ const ContactPage = () => {
               <p className="text-gray-600">info@seferbul.com</p>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <div className="bg-orange-500 p-4 rounded-full">
               <FaLocationDot className="text-white text-xl" />
             </div>
             <div>
               <h3 className="font-semibold text-lg">Adres</h3>
-              <p className="text-gray-600">Merkez Mahallesi, Atatürk Caddesi No:123<br />İstanbul, Türkiye</p>
+              <p className="text-gray-600">
+                Merkez Mahallesi, Atatürk Caddesi No:123
+                <br />
+                İstanbul, Türkiye
+              </p>
             </div>
           </div>
         </div>
@@ -85,7 +118,9 @@ const ContactPage = () => {
                 }`}
               />
               {errors.name && (
-                <span className="text-red-500 text-sm">{errors.name.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.name.message}
+                </span>
               )}
             </div>
 
@@ -99,7 +134,9 @@ const ContactPage = () => {
                 }`}
               />
               {errors.email && (
-                <span className="text-red-500 text-sm">{errors.email.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.email.message}
+                </span>
               )}
             </div>
 
@@ -113,7 +150,9 @@ const ContactPage = () => {
                 }`}
               />
               {errors.subject && (
-                <span className="text-red-500 text-sm">{errors.subject.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.subject.message}
+                </span>
               )}
             </div>
 
@@ -127,7 +166,9 @@ const ContactPage = () => {
                 }`}
               />
               {errors.message && (
-                <span className="text-red-500 text-sm">{errors.message.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.message.message}
+                </span>
               )}
             </div>
 
