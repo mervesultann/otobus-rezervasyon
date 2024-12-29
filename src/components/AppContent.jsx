@@ -25,4 +25,4 @@ function AppContent() {
   return <RouterProvider router={router} />;
 }
 
-export default AppContent; 
+export default AppContent;

@@ -56,7 +56,7 @@ const ContactPage = () => {
        
       }
 
-      toast.success("Mesajınız başarıyla gönderildi!");
+     
       reset();
     } catch (error) {
       console.error("Mesaj gönderme hatası:", error);
