@@ -12,13 +12,20 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { CircularProgress, Box, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  Box,
+  Typography,
+  useTheme,
+  Paper,
+} from "@mui/material";
 
 dayjs.locale("tr");
 
 const SatisGrafigi = () => {
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState([]);
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,26 +76,60 @@ const SatisGrafigi = () => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <Box
+        <Paper
+          elevation={3}
           sx={{
-            bgcolor: "background.paper",
             p: 2,
-            boxShadow: 3,
-            borderRadius: 1,
+            backgroundColor: "rgba(255, 255, 255, 0.95)",
+            backdropFilter: "blur(4px)",
+            border: `1px solid ${theme.palette.divider}`,
           }}
         >
-          <Typography variant="subtitle2" color="text.secondary">
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: theme.palette.text.secondary,
+              mb: 1,
+              fontWeight: "bold",
+            }}
+          >
             {label}
           </Typography>
           {payload.map((entry, index) => (
-            <Typography key={index} variant="body2" sx={{ color: entry.color }}>
-              {entry.name}:{" "}
-              {entry.name === "Satış Adedi"
-                ? `${entry.value} adet`
-                : `${entry.value.toLocaleString("tr-TR")} ₺`}
-            </Typography>
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                mb: 0.5,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: "50%",
+                  backgroundColor: entry.color,
+                }}
+              />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: theme.palette.text.primary,
+                  fontWeight: 500,
+                }}
+              >
+                {entry.name}:{" "}
+                <span style={{ fontWeight: "bold" }}>
+                  {entry.name === "Satış Adedi"
+                    ? `${entry.value} adet`
+                    : `${entry.value.toLocaleString("tr-TR")} ₺`}
+                </span>
+              </Typography>
+            </Box>
           ))}
-        </Box>
+        </Paper>
       );
     }
     return null;
@@ -98,43 +139,95 @@ const SatisGrafigi = () => {
     return (
       <Box
         display="flex"
+        flexDirection="column"
         justifyContent="center"
         alignItems="center"
         minHeight={300}
+        gap={2}
       >
-        <CircularProgress />
+        <CircularProgress size={40} />
+        <Typography variant="body2" color="text.secondary">
+          Veriler yükleniyor...
+        </Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ width: "100%", height: 300 }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: 350,
+        p: 2,
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: 2,
+        boxShadow: theme.shadows[1],
+      }}
+    >
       <ResponsiveContainer>
         <AreaChart
           data={chartData}
-          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
         >
           <defs>
             <linearGradient id="colorSatis" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#FF6B3D" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#FF6B3D" stopOpacity={0} />
+              <stop
+                offset="5%"
+                stopColor={theme.palette.primary.main}
+                stopOpacity={0.3}
+              />
+              <stop
+                offset="95%"
+                stopColor={theme.palette.primary.main}
+                stopOpacity={0}
+              />
             </linearGradient>
             <linearGradient id="colorGelir" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#2F54EB" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#2F54EB" stopOpacity={0} />
+              <stop
+                offset="5%"
+                stopColor={theme.palette.secondary.main}
+                stopOpacity={0.3}
+              />
+              <stop
+                offset="95%"
+                stopColor={theme.palette.secondary.main}
+                stopOpacity={0}
+              />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="tarih" />
-          <YAxis yAxisId="left" />
-          <YAxis yAxisId="right" orientation="right" />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke={theme.palette.divider}
+            opacity={0.5}
+          />
+          <XAxis
+            dataKey="tarih"
+            stroke={theme.palette.text.secondary}
+            tick={{ fill: theme.palette.text.secondary }}
+          />
+          <YAxis
+            yAxisId="left"
+            stroke={theme.palette.primary.main}
+            tick={{ fill: theme.palette.text.secondary }}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            stroke={theme.palette.secondary.main}
+            tick={{ fill: theme.palette.text.secondary }}
+          />
           <Tooltip content={<CustomTooltip />} />
-          <Legend />
+          <Legend
+            wrapperStyle={{
+              paddingTop: "20px",
+            }}
+          />
           <Area
             yAxisId="left"
             type="monotone"
             dataKey="Satış Adedi"
-            stroke="#FF6B3D"
+            stroke={theme.palette.primary.main}
+            strokeWidth={2}
             fillOpacity={1}
             fill="url(#colorSatis)"
           />
@@ -142,7 +235,8 @@ const SatisGrafigi = () => {
             yAxisId="right"
             type="monotone"
             dataKey="Gelir (₺)"
-            stroke="#2F54EB"
+            stroke={theme.palette.secondary.main}
+            strokeWidth={2}
             fillOpacity={1}
             fill="url(#colorGelir)"
           />

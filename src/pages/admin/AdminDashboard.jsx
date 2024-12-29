@@ -13,11 +13,12 @@ import {
 } from "antd";
 import {
   UserOutlined,
+  CalendarOutlined,
   CarOutlined,
   DollarOutlined,
-  ScheduleOutlined,
-  RiseOutlined,
 } from "@ant-design/icons";
+import { FaBus } from "react-icons/fa";
+import { GiMoneyStack } from "react-icons/gi";
 import { getSeferler } from "../../services/seferlerService";
 import { getAllBiletler } from "../../services/biletService";
 import dayjs from "dayjs";
@@ -95,27 +96,31 @@ const AdminDashboardPage = () => {
     {
       title: "Toplam Bilet",
       value: istatistikler.toplamBilet,
-      icon: <UserOutlined />,
+      icon: <UserOutlined className="text-2xl" />,
       color: "#1890ff",
+      bgColor: "#e6f4ff",
     },
     {
       title: "Bugün Satılan",
       value: istatistikler.bugunSatilanBilet,
-      icon: <ScheduleOutlined />,
+      icon: <CalendarOutlined className="text-2xl" />,
       color: "#52c41a",
+      bgColor: "#f6ffed",
     },
     {
       title: "Toplam Sefer",
       value: istatistikler.toplamSefer,
-      icon: <CarOutlined />,
+      icon: <FaBus className="text-2xl" />,
       color: "#722ed1",
+      bgColor: "#f9f0ff",
     },
     {
       title: "Toplam Gelir",
       value: istatistikler.toplamGelir,
-      icon: <DollarOutlined />,
+      icon: <GiMoneyStack className="text-2xl" />,
       suffix: "₺",
       color: "#fa541c",
+      bgColor: "#fff2e8",
       precision: 2,
     },
   ];
@@ -136,10 +141,16 @@ const AdminDashboardPage = () => {
             >
               <div className="flex items-center gap-4">
                 <div
-                  className="p-3 rounded-full"
-                  style={{ backgroundColor: `${kart.color}20` }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center"
+                  style={{
+                    backgroundColor: kart.bgColor,
+                    boxShadow: `0 0 0 1px ${kart.color}20`,
+                  }}
                 >
-                  <span style={{ color: kart.color, fontSize: "24px" }}>
+                  <span
+                    className="flex items-center justify-center"
+                    style={{ color: kart.color }}
+                  >
                     {kart.icon}
                   </span>
                 </div>
