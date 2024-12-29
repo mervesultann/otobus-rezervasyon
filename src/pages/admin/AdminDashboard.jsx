@@ -1,12 +1,22 @@
 import { useState, useEffect } from "react";
-import { Card, Row, Col, Statistic, Table, List, Avatar, Tabs, Tag } from "antd";
+import {
+  Card,
+  Row,
+  Col,
+  Statistic,
+  Table,
+  List,
+  Avatar,
+  Tabs,
+  Tag,
+  Progress,
+} from "antd";
 import {
   UserOutlined,
   CarOutlined,
   DollarOutlined,
   ScheduleOutlined,
   RiseOutlined,
-  TeamOutlined,
 } from "@ant-design/icons";
 import { getSeferler } from "../../services/seferlerService";
 import { getAllBiletler } from "../../services/biletService";
@@ -34,12 +44,11 @@ const AdminDashboardPage = () => {
           getSeferler(),
         ]);
 
-        const bugun = dayjs().startOf('day');
-        const bugunSatilanBiletler = biletler.filter(bilet => 
+        const bugun = dayjs().startOf("day");
+        const bugunSatilanBiletler = biletler.filter((bilet) =>
           dayjs(bilet.createdAt?.toDate()).isAfter(bugun)
         );
 
-        // Popüler rotaları hesapla
         const rotalar = biletler.reduce((acc, bilet) => {
           const rota = `${bilet.seferBilgileri.kalkis} - ${bilet.seferBilgileri.varis}`;
           acc[rota] = (acc[rota] || 0) + 1;
@@ -51,9 +60,18 @@ const AdminDashboardPage = () => {
           .sort((a, b) => b.sayi - a.sayi)
           .slice(0, 5);
 
-        const toplamGelir = biletler.reduce((toplam, bilet) => 
-          toplam + (bilet.seferBilgileri?.fiyat || 0), 0
+        const toplamGelir = biletler.reduce(
+          (toplam, bilet) => toplam + (bilet.seferBilgileri?.fiyat || 0),
+          0
         );
+
+        const siraliSonBiletler = biletler
+          .sort((a, b) => {
+            const tarihA = a.createdAt?.toDate();
+            const tarihB = b.createdAt?.toDate();
+            return tarihB - tarihA;
+          })
+          .slice(0, 5);
 
         setIstatistikler({
           toplamBilet: biletler.length,
@@ -61,11 +79,10 @@ const AdminDashboardPage = () => {
           toplamSefer: seferler.length,
           toplamGelir: toplamGelir,
           toplamUye: 0,
-          sonBiletler: biletler.slice(-5).reverse(),
+          sonBiletler: siraliSonBiletler,
           populerRotalar,
           uyeler: [],
         });
-
       } catch (error) {
         console.error("Veri yükleme hatası:", error);
       }
@@ -74,109 +91,170 @@ const AdminDashboardPage = () => {
     fetchData();
   }, []);
 
+  const istatistikKartlari = [
+    {
+      title: "Toplam Bilet",
+      value: istatistikler.toplamBilet,
+      icon: <UserOutlined />,
+      color: "#1890ff",
+    },
+    {
+      title: "Bugün Satılan",
+      value: istatistikler.bugunSatilanBilet,
+      icon: <ScheduleOutlined />,
+      color: "#52c41a",
+    },
+    {
+      title: "Toplam Sefer",
+      value: istatistikler.toplamSefer,
+      icon: <CarOutlined />,
+      color: "#722ed1",
+    },
+    {
+      title: "Toplam Gelir",
+      value: istatistikler.toplamGelir,
+      icon: <DollarOutlined />,
+      suffix: "₺",
+      color: "#fa541c",
+      precision: 2,
+    },
+  ];
+
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
-      
-      {/* İstatistik Kartları */}
-      <Row gutter={[16, 16]} className="mb-6">
-        <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <Statistic
-              title="Toplam Bilet Sayısı"
-              value={istatistikler.toplamBilet}
-              prefix={<UserOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <Statistic
-              title="Bugün Satılan Bilet"
-              value={istatistikler.bugunSatilanBilet}
-              prefix={<ScheduleOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <Statistic
-              title="Toplam Sefer Sayısı"
-              value={istatistikler.toplamSefer}
-              prefix={<CarOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <Statistic
-              title="Toplam Gelir"
-              value={istatistikler.toplamGelir}
-              prefix={<DollarOutlined />}
-              suffix="₺"
-              precision={2}
-            />
-          </Card>
-        </Col>
+    <div className="p-4 md:p-6 space-y-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <span className="text-gray-500">{dayjs().format("DD MMMM YYYY")}</span>
+      </div>
+
+      <Row gutter={[16, 16]}>
+        {istatistikKartlari.map((kart, index) => (
+          <Col xs={24} sm={12} lg={6} key={index}>
+            <Card
+              className="hover:shadow-lg transition-shadow duration-300"
+              bodyStyle={{ padding: "24px" }}
+            >
+              <div className="flex items-center gap-4">
+                <div
+                  className="p-3 rounded-full"
+                  style={{ backgroundColor: `${kart.color}20` }}
+                >
+                  <span style={{ color: kart.color, fontSize: "24px" }}>
+                    {kart.icon}
+                  </span>
+                </div>
+                <Statistic
+                  title={kart.title}
+                  value={kart.value}
+                  precision={kart.precision}
+                  suffix={kart.suffix}
+                />
+              </div>
+            </Card>
+          </Col>
+        ))}
       </Row>
 
-      {/* Grafikler Bölümü */}
-      <Row gutter={[16, 16]} className="mb-6">
+      <Row gutter={[16, 16]}>
         <Col xs={24} lg={16}>
-          <Card title="Satış Grafiği" className="h-[400px]">
-            <SatisGrafigi biletler={istatistikler.sonBiletler} />
+          <Card
+            title="Satış Grafiği"
+            className="hover:shadow-lg transition-shadow duration-300"
+          >
+            <SatisGrafigi />
           </Card>
         </Col>
         <Col xs={24} lg={8}>
-          <Card title="Popüler Rotalar" className="h-[400px]">
+          <Card
+            title="Popüler Rotalar"
+            className="hover:shadow-lg transition-shadow duration-300"
+          >
             <PopulerRotalar rotalar={istatistikler.populerRotalar} />
           </Card>
         </Col>
       </Row>
 
-      {/* Son ��şlemler ve Detaylar */}
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={12}>
-          <Card title="Son Satılan Biletler">
+          <Card
+            title={
+              <div className="flex justify-between items-center">
+                <span>Son Satışlar</span>
+                <span className="text-sm text-gray-500">
+                  Son {istatistikler.sonBiletler.length} satış
+                </span>
+              </div>
+            }
+            className="hover:shadow-lg transition-shadow duration-300"
+          >
             <List
               itemLayout="horizontal"
               dataSource={istatistikler.sonBiletler}
-              renderItem={bilet => (
+              renderItem={(bilet) => (
                 <List.Item>
                   <List.Item.Meta
-                    avatar={<Avatar icon={<UserOutlined />} />}
-                    title={`${bilet.yolcuBilgileri.ad} ${bilet.yolcuBilgileri.soyad}`}
+                    avatar={
+                      <Avatar
+                        icon={<UserOutlined />}
+                        style={{ backgroundColor: "#1890ff" }}
+                      />
+                    }
+                    title={
+                      <div className="flex justify-between">
+                        <span>{`${bilet.yolcuBilgileri.ad} ${bilet.yolcuBilgileri.soyad}`}</span>
+                        <Tag color="blue">₺{bilet.seferBilgileri.fiyat}</Tag>
+                      </div>
+                    }
                     description={
-                      <>
-                        <div>{bilet.seferBilgileri.kalkis} - {bilet.seferBilgileri.varis}</div>
-                        <div className="text-sm text-gray-500">
-                          {dayjs(bilet.createdAt?.toDate()).format("DD.MM.YYYY HH:mm")}
+                      <div className="text-sm text-gray-500">
+                        <div>{`${bilet.seferBilgileri.kalkis} - ${bilet.seferBilgileri.varis}`}</div>
+                        <div className="flex items-center gap-1">
+                          <span>
+                            {dayjs(bilet.createdAt?.toDate()).format(
+                              "DD.MM.YYYY HH:mm"
+                            )}
+                          </span>
+                          {dayjs().diff(
+                            dayjs(bilet.createdAt?.toDate()),
+                            "hour"
+                          ) < 24 && <Tag color="green">Yeni</Tag>}
                         </div>
-                      </>
+                      </div>
                     }
                   />
-                  <div className="font-semibold">₺{bilet.seferBilgileri.fiyat}</div>
                 </List.Item>
               )}
             />
           </Card>
         </Col>
         <Col xs={24} lg={12}>
-          <Card title="Haftalık Özet">
+          <Card
+            title="Rota İstatistikleri"
+            className="hover:shadow-lg transition-shadow duration-300"
+          >
             <Table
               dataSource={istatistikler.populerRotalar}
               columns={[
                 {
-                  title: 'Rota',
-                  dataIndex: 'rota',
-                  key: 'rota',
+                  title: "Rota",
+                  dataIndex: "rota",
+                  key: "rota",
                 },
                 {
-                  title: 'Satış',
-                  dataIndex: 'sayi',
-                  key: 'sayi',
-                  render: (sayi) => <Tag color="blue">{sayi}</Tag>
-                }
+                  title: "Satış",
+                  dataIndex: "sayi",
+                  key: "sayi",
+                  render: (sayi, record) => (
+                    <div className="flex items-center gap-2">
+                      <span>{sayi}</span>
+                      <Progress
+                        percent={(sayi / istatistikler.toplamBilet) * 100}
+                        size="small"
+                        showInfo={false}
+                      />
+                    </div>
+                  ),
+                },
               ]}
               pagination={false}
             />

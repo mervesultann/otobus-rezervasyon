@@ -1,111 +1,155 @@
-import { Column } from "@ant-design/charts";
+import { useEffect, useState } from "react";
+import { getAllBiletler } from "../../../services/biletService";
 import dayjs from "dayjs";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchBiletler } from "../../../redux/slices/biletSlice";
-import 'dayjs/locale/tr';
+import "dayjs/locale/tr";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { CircularProgress, Box, Typography } from "@mui/material";
 
-dayjs.locale('tr');
+dayjs.locale("tr");
 
 const SatisGrafigi = () => {
-  const dispatch = useDispatch();
-  const { biletler, loading } = useSelector((state) => state.bilet);
+  const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchBiletler());
-  }, [dispatch]);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const biletler = await getAllBiletler();
 
-  // Son 7 günün verilerini hazırla
-  const son7Gun = Array.from({ length: 7 }, (_, i) => {
-    return dayjs().subtract(i, "day").format("YYYY-MM-DD");
-  }).reverse();
+        const son7Gun = Array.from({ length: 7 }, (_, i) => {
+          return dayjs().subtract(i, "day").startOf("day");
+        }).reverse();
 
-  // Günlük satış ve gelir verilerini hesapla
-  const chartData = son7Gun.map((tarih) => {
-    const gunlukBiletler = biletler.filter(
-      (bilet) => dayjs(bilet.createdAt?.toDate()).format("YYYY-MM-DD") === tarih
-    );
+        const gunlukVeriler = son7Gun.map((gun) => {
+          const gunBaslangic = gun;
+          const gunBitis = gun.endOf("day");
 
-    return {
-      tarih: dayjs(tarih).format("DD MMM"),
-      satis: gunlukBiletler.length,
-      gelir: gunlukBiletler.reduce(
-        (toplam, bilet) => toplam + (bilet.seferBilgileri?.fiyat || 0), 
-        0
-      ),
-    };
-  });
+          const gunlukBiletler = biletler.filter((bilet) => {
+            const biletTarihi = bilet.createdAt?.toDate();
+            if (!biletTarihi) return false;
 
-  const config = {
-    data: chartData,
-    isGroup: true,
-    xField: "tarih",
-    yField: "value",
-    seriesField: "type",
-    columnStyle: {
-      radius: [4, 4, 0, 0],
-    },
-    label: {
-      position: "middle",
-      style: {
-        fill: "#FFFFFF",
-        opacity: 0.8,
-      },
-    },
-    xAxis: {
-      label: {
-        style: {
-          fontSize: 12,
-          fontWeight: "bold",
-        },
-      },
-    },
-    yAxis: {
-      label: {
-        formatter: (v) => `${v}`,
-      },
-    },
-    legend: {
-      position: "top",
-    },
-    tooltip: {
-      showMarkers: false,
-      shared: true,
-    },
-    theme: {
-      colors10: ["#FF6B3D", "#2F54EB"],
-    },
-  };
+            const biletGunu = dayjs(biletTarihi);
+            return (
+              biletGunu.isAfter(gunBaslangic) && biletGunu.isBefore(gunBitis)
+            );
+          });
 
-  // Veriyi grafik için dönüştür
-  const transformedData = chartData.reduce((acc, item) => {
-    acc.push(
-      {
-        tarih: item.tarih,
-        type: "Satış Adedi",
-        value: item.satis,
-      },
-      {
-        tarih: item.tarih,
-        type: "Gelir (₺)",
-        value: item.gelir,
+          const gunlukGelir = gunlukBiletler.reduce((toplam, bilet) => {
+            return toplam + (Number(bilet.odenecekTutar) || 0);
+          }, 0);
+
+          return {
+            tarih: gun.format("DD MMM"),
+            "Satış Adedi": gunlukBiletler.length,
+            "Gelir (₺)": gunlukGelir,
+          };
+        });
+
+        setChartData(gunlukVeriler);
+        setLoading(false);
+      } catch (error) {
+        console.error("Veri yükleme hatası:", error);
+        setLoading(false);
       }
-    );
-    return acc;
+    };
+
+    fetchData();
   }, []);
 
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <Box
+          sx={{
+            bgcolor: "background.paper",
+            p: 2,
+            boxShadow: 3,
+            borderRadius: 1,
+          }}
+        >
+          <Typography variant="subtitle2" color="text.secondary">
+            {label}
+          </Typography>
+          {payload.map((entry, index) => (
+            <Typography key={index} variant="body2" sx={{ color: entry.color }}>
+              {entry.name}:{" "}
+              {entry.name === "Satış Adedi"
+                ? `${entry.value} adet`
+                : `${entry.value.toLocaleString("tr-TR")} ₺`}
+            </Typography>
+          ))}
+        </Box>
+      );
+    }
+    return null;
+  };
+
   if (loading) {
-    return <div>Yükleniyor...</div>;
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight={300}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
-    <div style={{ height: 300 }}>
-      <Column {...config} data={transformedData} />
-    </div>
+    <Box sx={{ width: "100%", height: 300 }}>
+      <ResponsiveContainer>
+        <AreaChart
+          data={chartData}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        >
+          <defs>
+            <linearGradient id="colorSatis" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#FF6B3D" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#FF6B3D" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="colorGelir" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#2F54EB" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#2F54EB" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="tarih" />
+          <YAxis yAxisId="left" />
+          <YAxis yAxisId="right" orientation="right" />
+          <Tooltip content={<CustomTooltip />} />
+          <Legend />
+          <Area
+            yAxisId="left"
+            type="monotone"
+            dataKey="Satış Adedi"
+            stroke="#FF6B3D"
+            fillOpacity={1}
+            fill="url(#colorSatis)"
+          />
+          <Area
+            yAxisId="right"
+            type="monotone"
+            dataKey="Gelir (₺)"
+            stroke="#2F54EB"
+            fillOpacity={1}
+            fill="url(#colorGelir)"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </Box>
   );
 };
 
 export default SatisGrafigi;
-
-
-
