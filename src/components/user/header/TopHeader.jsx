@@ -23,8 +23,8 @@ const TopHeader = () => {
   }, []);
 
   return (
-    <div className="container mx-auto bg-neutral-400 h-auto w-full flex flex-col justify-around items-center md:flex-row gap-2 py-2">
-      <div className="flex-1 flex justify-center items-center h-8 min-w-[200px] overflow-hidden">
+    <div className=" mx-auto bg-neutral-400 h-auto w-full flex flex-col justify-around items-center md:flex-row gap-2 py-2">
+      <div className="flex-1 flex justify-center items-center h-8 min-w-[200] overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.span
             key={currentIndex}
