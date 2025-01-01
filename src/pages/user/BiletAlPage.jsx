@@ -81,20 +81,24 @@ const BiletAlPage = () => {
         <Card className="mb-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="font-semibold">Kalkış:</p>
+              <p className="font-semibold">Kalkış Yeri:</p>
               <p>{sefer?.kalkis}</p>
             </div>
             <div>
-              <p className="font-semibold">Varış:</p>
+              <p className="font-semibold">Varış Yeri:</p>
               <p>{sefer?.varis}</p>
             </div>
             <div>
-              <p className="font-semibold">Tarih:</p>
+              <p className="font-semibold">Sefer Tarihi:</p>
               <p>{dayjs(sefer?.tarih).format("DD.MM.YYYY")}</p>
             </div>
             <div>
-              <p className="font-semibold">Saat:</p>
-              <p>{sefer?.saat}</p>
+              <p className="font-semibold">Kalkış Saati:</p>
+              <p>{sefer?.kalkisSaati}</p>
+            </div>
+            <div>
+              <p className="font-semibold">Varış Saati:</p>
+              <p>{sefer?.varisSaati}</p>
             </div>
             <div>
               <p className="font-semibold">Fiyat:</p>

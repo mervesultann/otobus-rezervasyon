@@ -1,20 +1,57 @@
-import { useState } from 'react';
-import { Modal, Radio } from 'antd';
-import { FaUserCircle } from 'react-icons/fa';
+import { useState } from "react";
+import { Modal, Radio } from "antd";
+import { FaUserCircle } from "react-icons/fa";
 import { MdEventSeat } from "react-icons/md";
-import classNames from 'classnames';
+import classNames from "classnames";
 
 const KoltukSecimi = ({ sefer, selectedSeat, onSeatSelect }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [tempSeat, setTempSeat] = useState(null);
   const [cinsiyet, setCinsiyet] = useState(null);
+  const [yasakliCinsiyet, setYasakliCinsiyet] = useState(null);
+
+  // Yan koltukları kontrol et
+  const getYanKoltuklar = (koltukNo) => {
+    const sira = Math.ceil(koltukNo / 4);
+    const pozisyon = koltukNo % 4 || 4;
+
+    let yanKoltuklar = [];
+
+    // Sol taraf kontrolü (1-2, 4-5)
+    if (pozisyon === 1) {
+      yanKoltuklar.push(koltukNo + 1);
+    } else if (pozisyon === 2) {
+      yanKoltuklar.push(koltukNo - 1);
+    }
+    // Sağ taraf kontrolü (4-5)
+    else if (pozisyon === 4) {
+      yanKoltuklar.push(koltukNo + 1);
+    } else if (pozisyon === 5) {
+      yanKoltuklar.push(koltukNo - 1);
+    }
+
+    return yanKoltuklar;
+  };
 
   const handleKoltukClick = (koltukNo) => {
     if (sefer.koltuklar?.[koltukNo]) {
       toast.error("Bu koltuk dolu");
       return;
     }
-    
+
+    // Yan koltukları kontrol et
+    const yanKoltuklar = getYanKoltuklar(koltukNo);
+    let yasakliCins = null;
+
+    for (const yanKoltuk of yanKoltuklar) {
+      const yanYolcu = sefer.koltuklar?.[yanKoltuk];
+      if (yanYolcu) {
+        yasakliCins = yanYolcu.cinsiyet === "K" ? "E" : "K";
+        break;
+      }
+    }
+
+    setYasakliCinsiyet(yasakliCins);
     setTempSeat(koltukNo);
     setModalVisible(true);
   };
@@ -27,10 +64,10 @@ const KoltukSecimi = ({ sefer, selectedSeat, onSeatSelect }) => {
 
   const getKoltukRenk = (koltukNo) => {
     const koltuk = sefer.koltuklar?.[koltukNo];
-    if (!koltuk) return 'bg-green-500 hover:bg-green-600'; // Boş
-    if (koltuk.cinsiyet === 'K') return 'bg-pink-500'; // Kadın
-    if (koltuk.cinsiyet === 'E') return 'bg-blue-500'; // Erkek
-    return 'bg-gray-500'; // Varsayılan
+    if (!koltuk) return "bg-green-500 hover:bg-green-600"; // Boş
+    if (koltuk.cinsiyet === "K") return "bg-pink-500"; // Kadın
+    if (koltuk.cinsiyet === "E") return "bg-blue-500"; // Erkek
+    return "bg-gray-500"; // Varsayılan
   };
 
   return (
@@ -49,7 +86,12 @@ const KoltukSecimi = ({ sefer, selectedSeat, onSeatSelect }) => {
 
           // Koridor düzeni için boşluk bırakma
           if (koltukNo % 4 === 3) {
-            return <div key={`space-${koltukNo}`} className="flex justify-center items-center" />;
+            return (
+              <div
+                key={`space-${koltukNo}`}
+                className="flex justify-center items-center"
+              />
+            );
           }
 
           return (
@@ -57,9 +99,9 @@ const KoltukSecimi = ({ sefer, selectedSeat, onSeatSelect }) => {
               key={koltukNo}
               onClick={() => handleKoltukClick(koltukNo)}
               className={classNames(
-                'p-2 rounded-lg flex flex-col items-center justify-center transition-colors',
+                "p-2 rounded-lg flex flex-col items-center justify-center transition-colors",
                 getKoltukRenk(koltukNo),
-                isSelected && 'ring-4 ring-yellow-400'
+                isSelected && "ring-4 ring-yellow-400"
               )}
             >
               <MdEventSeat className="text-2xl text-white" />
@@ -73,16 +115,43 @@ const KoltukSecimi = ({ sefer, selectedSeat, onSeatSelect }) => {
         title="Cinsiyet Seçimi"
         open={modalVisible}
         onOk={handleCinsiyetSecim}
-        onCancel={() => setModalVisible(false)}
+        onCancel={() => {
+          setModalVisible(false);
+          setCinsiyet(null);
+          setYasakliCinsiyet(null);
+        }}
         okButtonProps={{ disabled: !cinsiyet }}
       >
-        <Radio.Group onChange={(e) => setCinsiyet(e.target.value)} value={cinsiyet}>
+        <Radio.Group
+          onChange={(e) => setCinsiyet(e.target.value)}
+          value={cinsiyet}
+        >
           <div className="flex gap-4">
-            <Radio.Button value="K" className="flex-1 text-center h-20 flex items-center justify-center">
-              <div className="bg-pink-500 p-2 rounded-full text-white">Kadın</div>
+            <Radio.Button
+              value="K"
+              disabled={yasakliCinsiyet === "K"}
+              className="flex-1 text-center h-20 flex items-center justify-center"
+            >
+              <div
+                className={`${
+                  yasakliCinsiyet === "K" ? "bg-gray-400" : "bg-pink-500"
+                } p-2 rounded-full text-white`}
+              >
+                Kadın
+              </div>
             </Radio.Button>
-            <Radio.Button value="E" className="flex-1 text-center h-20 flex items-center justify-center">
-              <div className="bg-blue-500 p-2 rounded-full text-white">Erkek</div>
+            <Radio.Button
+              value="E"
+              disabled={yasakliCinsiyet === "E"}
+              className="flex-1 text-center h-20 flex items-center justify-center"
+            >
+              <div
+                className={`${
+                  yasakliCinsiyet === "E" ? "bg-gray-400" : "bg-blue-500"
+                } p-2 rounded-full text-white`}
+              >
+                Erkek
+              </div>
             </Radio.Button>
           </div>
         </Radio.Group>
@@ -110,4 +179,4 @@ const KoltukSecimi = ({ sefer, selectedSeat, onSeatSelect }) => {
   );
 };
 
-export default KoltukSecimi; 
+export default KoltukSecimi;
