@@ -2,6 +2,7 @@
 import { lazy, Suspense } from "react"
 import { Spin } from "../components/Spin"
 import AdminLayout from "../layouts/AdminLayout"
+import AbonelikPage from "../pages/admin/Abonelik"
 
 const Biletler = lazy(()=>import("../components/admin/biletler/Biletler"))
 const RequireRole = lazy(()=>import("../components/form/RequireRole"))
@@ -32,6 +33,7 @@ const adminRoutes = [
           {path:"gelir",element:<Suspense fallback={<Spin/>}><GelirPage/></Suspense>},
           {path:"mesajlar",element:<Suspense fallback={<Spin/>}><Messages/></Suspense>},
           {path:"gezilecek-yerler",element:<Suspense fallback={<Spin/>}><GezilecekYerler/></Suspense>},
+          {path:"abonelik",element:<Suspense fallback={<Spin/>}><AbonelikPage/></Suspense>},
           { path: "*", element: <NotFound /> },
         ],
       },

@@ -131,7 +131,15 @@ const Sidebar = ({ isMobile }) => {
             {(isOpen || isMobile) && <span className="ml-3">Gezilecek Yerler</span>}
           </Link>
         </li>
-
+        <li>
+          <Link
+            to="/admin/abonelik"
+            className="flex items-center hover:bg-gray-700 p-2 rounded"
+          >
+            <FaEnvelope className={`text-xl ${isMobile ? "" : "block"}`} />
+            {(isOpen || isMobile) && <span className="ml-3">Abonelikler</span>}
+          </Link>
+        </li>
         <li>
           <Link
             to="/"
