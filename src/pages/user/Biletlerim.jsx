@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 import { getUserBiletler } from "../../services/biletService";
 import BiletYazdir from "../../components/user/BiletYazdir";
 import { useMediaQuery } from "react-responsive";
-import { generateBiletNo } from "../../utils/biletUtils";
 
 const Biletlerim = () => {
   const [biletler, setBiletler] = useState([]);
@@ -25,7 +24,17 @@ const Biletlerim = () => {
 
       try {
         const data = await getUserBiletler(user.uid);
-        setBiletler(data);
+        // Biletleri satın alma tarihine göre sırala (en yeni en üstte)
+        const sortedBiletler = data.sort((a, b) => {
+          const dateA = a.createdAt?.toDate
+            ? a.createdAt.toDate()
+            : new Date(a.createdAt);
+          const dateB = b.createdAt?.toDate
+            ? b.createdAt.toDate()
+            : new Date(b.createdAt);
+          return dateB - dateA;
+        });
+        setBiletler(sortedBiletler);
       } catch (error) {
         console.error("Hata:", error);
       } finally {
