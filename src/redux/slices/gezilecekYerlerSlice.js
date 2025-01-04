@@ -5,6 +5,7 @@ import {
   addGezilecekYer,
   updateGezilecekYer,
   toggleGezilecekYerDurum,
+  deleteGezilecekYer,
 } from "../../services/gezilecekYerlerService";
 
 const initialState = {
@@ -64,6 +65,14 @@ export const toggleDurum = createAsyncThunk(
   }
 );
 
+export const deleteYer = createAsyncThunk(
+  "gezilecekYerler/deleteYer",
+  async (id) => {
+    await deleteGezilecekYer(id);
+    return id;
+  }
+);
+
 const gezilecekYerlerSlice = createSlice({
   name: "gezilecekYerler",
   initialState,
@@ -105,6 +114,10 @@ const gezilecekYerlerSlice = createSlice({
         if (index !== -1) {
           state.yerler[index].aktif = action.payload.aktif;
         }
+      })
+      .addCase(deleteYer.fulfilled, (state, action) => {
+        state.yerler = state.yerler.filter((yer) => yer.id !== action.payload);
+        state.loading = false;
       });
   },
 });

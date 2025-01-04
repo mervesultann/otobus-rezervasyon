@@ -89,3 +89,15 @@ export const toggleGezilecekYerDurum = async (id, aktif) => {
     throw error;
   }
 };
+
+export const deleteGezilecekYer = async (id) => {
+  try {
+    const yerRef = doc(db, "gezilecekYerler", id);
+    await deleteDoc(yerRef);
+    toast.success("Gezilecek yer başarıyla silindi");
+  } catch (error) {
+    console.error("Gezilecek yer silme hatası:", error);
+    toast.error("Gezilecek yer silinirken bir hata oluştu");
+    throw error;
+  }
+};

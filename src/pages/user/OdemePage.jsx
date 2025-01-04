@@ -222,7 +222,7 @@ const OdemePage = () => {
         <Form layout="vertical" onFinish={handleSubmit}>
           <div className="mb-6">
             <Radio.Group defaultValue="kart" className="w-full">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols md:grid-cols gap-4 ">
                 <Radio.Button
                   value="kart"
                   className="h-20 flex items-center justify-center"
@@ -232,15 +232,7 @@ const OdemePage = () => {
                     <span>Kredi/Banka Kartı</span>
                   </div>
                 </Radio.Button>
-                <Radio.Button
-                  value="havale"
-                  className="h-20 flex items-center justify-center"
-                >
-                  <div className="flex items-center">
-                    <WalletOutlined className="text-xl mr-2" />
-                    <span>Havale/EFT</span>
-                  </div>
-                </Radio.Button>
+              
               </div>
             </Radio.Group>
           </div>

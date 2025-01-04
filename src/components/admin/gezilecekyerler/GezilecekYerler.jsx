@@ -10,12 +10,18 @@ import {
   Space,
   Popconfirm,
 } from "antd";
-import { EditOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import {
   fetchYerler,
   createYer,
   updateYer,
   toggleDurum,
+  deleteYer,
 } from "../../../redux/slices/gezilecekYerlerSlice";
 import { toast } from "react-hot-toast";
 
@@ -87,6 +93,16 @@ const GezilecekYerler = () => {
     setImageUrl(record.image);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await dispatch(deleteYer(id));
+      toast.success("Gezilecek yer başarıyla silindi");
+    } catch (error) {
+      console.error("Silme hatası:", error);
+      toast.error("Silme işlemi başarısız oldu");
+    }
+  };
+
   const handleDurumToggle = async (id, yeniDurum) => {
     await dispatch(toggleDurum({ id, aktif: yeniDurum }));
   };
@@ -143,13 +159,25 @@ const GezilecekYerler = () => {
       title: "İşlemler",
       key: "actions",
       render: (_, record) => (
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          onClick={() => handleEdit(record)}
-        >
-          Düzenle
-        </Button>
+        <Space>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+          >
+            Düzenle
+          </Button>
+          <Popconfirm
+            title="Gezilecek yeri silmek istediğinizden emin misiniz?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Evet"
+            cancelText="Hayır"
+          >
+            <Button type="primary" danger icon={<DeleteOutlined />}>
+              Sil
+            </Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
