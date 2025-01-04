@@ -5,8 +5,8 @@ import roleReducer from "./slices/roleSlice";
 import biletReducer from "./slices/biletSlice";
 import kampanyaReducer from "./slices/kampanyaSlice";
 import kampanyaBannerReducer from "./slices/kampanyaBannerSlice";
-import messageReducer from './slices/messageSlice';
-
+import messageReducer from "./slices/messageSlice";
+import gezilecekYerlerReducer from "./slices/gezilecekYerlerSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -15,5 +15,6 @@ export const store = configureStore({
     kampanya: kampanyaReducer,
     kampanyaBanner: kampanyaBannerReducer,
     messages: messageReducer,
+    gezilecekYerler: gezilecekYerlerReducer,
   },
 });

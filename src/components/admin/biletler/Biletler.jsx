@@ -70,19 +70,19 @@ const Biletler = () => {
   };
 
   const filterData = (search, dates, kalkis, varis) => {
-    let filtered = [...biletler];
+    let filtered = biletler.filter((bilet) => bilet?.seferBilgileri);
 
     if (search) {
       filtered = filtered.filter(
         (bilet) =>
-          bilet.yolcuBilgileri.ad
-            .toLowerCase()
+          bilet.yolcuBilgileri?.ad
+            ?.toLowerCase()
             .includes(search.toLowerCase()) ||
-          bilet.yolcuBilgileri.soyad
-            .toLowerCase()
+          bilet.yolcuBilgileri?.soyad
+            ?.toLowerCase()
             .includes(search.toLowerCase()) ||
-          bilet.yolcuBilgileri.tcno.includes(search) ||
-          bilet.id.includes(search)
+          bilet.yolcuBilgileri?.tcno?.includes(search) ||
+          bilet.biletNo?.includes(search)
       );
     }
 
@@ -90,6 +90,7 @@ const Biletler = () => {
       const [start, end] = dates;
       filtered = filtered.filter(
         (bilet) =>
+          bilet.seferBilgileri?.tarih &&
           dayjs(bilet.seferBilgileri.tarih).isAfter(start) &&
           dayjs(bilet.seferBilgileri.tarih).isBefore(end)
       );
@@ -97,13 +98,13 @@ const Biletler = () => {
 
     if (kalkis) {
       filtered = filtered.filter(
-        (bilet) => bilet.seferBilgileri.kalkis === kalkis
+        (bilet) => bilet.seferBilgileri?.kalkis === kalkis
       );
     }
 
     if (varis) {
       filtered = filtered.filter(
-        (bilet) => bilet.seferBilgileri.varis === varis
+        (bilet) => bilet.seferBilgileri?.varis === varis
       );
     }
 
@@ -111,7 +112,25 @@ const Biletler = () => {
   };
 
   const getUniqueLocations = (type) => {
-    const locations = [...new Set(biletler.map((b) => b.seferBilgileri[type]))];
+    if (!biletler || !Array.isArray(biletler)) return [];
+
+    const locations = [
+      ...new Set(
+        biletler
+          .filter((b) => b?.seferBilgileri)
+          .map((b) => {
+            if (type === "kalkisyeri") {
+              return b.seferBilgileri?.kalkis;
+            }
+            if (type === "varisyeri") {
+              return b.seferBilgileri?.varis;
+            }
+            return null;
+          })
+          .filter(Boolean)
+      ),
+    ];
+
     return locations.map((location) => ({ value: location, label: location }));
   };
 
@@ -139,19 +158,23 @@ const Biletler = () => {
       title: "Sefer Bilgileri",
       dataIndex: "seferBilgileri",
       key: "seferBilgileri",
-      render: (sefer) => (
-        <div>
-          <div className="font-medium">
-            {sefer.kalkis} - {sefer.varis}
+      render: (sefer) => {
+        if (!sefer) return "-";
+        return (
+          <div>
+            <div className="font-medium">
+              {sefer?.kalkis || "-"} - {sefer?.varis || "-"}
+            </div>
+            <div className="text-sm text-gray-500">
+              {sefer?.tarih ? dayjs(sefer.tarih).format("DD.MM.YYYY") : "-"}
+            </div>
+            <div className="text-sm text-gray-500">
+              Kalkış: {sefer?.kalkisSaati || "-"} - Varış:{" "}
+              {sefer?.varisSaati || "-"}
+            </div>
           </div>
-          <div className="text-sm text-gray-500">
-            {dayjs(sefer.tarih).format("DD.MM.YYYY")}
-          </div>
-          <div className="text-sm text-gray-500">
-            Kalkış: {sefer.kalkisSaati} - Varış: {sefer.varisSaati}
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       title: "Koltuk No",
@@ -163,7 +186,11 @@ const Biletler = () => {
       title: "Ücret",
       dataIndex: "seferBilgileri",
       key: "ucret",
-      render: (sefer) => <span className="font-semibold">₺{sefer.fiyat}</span>,
+      render: (sefer) => (
+        <span className="font-semibold">
+          ₺{sefer?.fiyat || sefer?.odenecekTutar || 0}
+        </span>
+      ),
     },
     {
       title: "Satın Alma Tarihi",
@@ -174,12 +201,16 @@ const Biletler = () => {
         const date = tarih?.toDate ? tarih.toDate() : new Date(tarih);
         return dayjs(date).format("DD.MM.YYYY HH:mm");
       },
-      defaultSortOrder: 'descend',
+      defaultSortOrder: "descend",
       sorter: (a, b) => {
-        const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
-        const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+        const dateA = a.createdAt?.toDate
+          ? a.createdAt.toDate()
+          : new Date(a.createdAt);
+        const dateB = b.createdAt?.toDate
+          ? b.createdAt.toDate()
+          : new Date(b.createdAt);
         return dateA - dateB;
-      }
+      },
     },
     {
       title: "İşlemler",
@@ -293,13 +324,13 @@ const Biletler = () => {
               placeholder="Kalkış Yeri Seç"
               allowClear
               onChange={handleKalkisFilter}
-              options={getUniqueLocations("kalkis")}
+              options={getUniqueLocations("kalkisyeri")}
             />
             <Select
               placeholder="Varış Yeri Seç"
               allowClear
               onChange={handleVarisFilter}
-              options={getUniqueLocations("varis")}
+              options={getUniqueLocations("varisyeri")}
             />
           </div>
         </div>
@@ -310,7 +341,7 @@ const Biletler = () => {
           loading={loading}
           scroll={{ x: true }}
           defaultSortOrder="descend"
-          sortDirections={['descend', 'ascend']}
+          sortDirections={["descend", "ascend"]}
         />
       </Card>
 

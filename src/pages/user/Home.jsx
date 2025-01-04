@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import Spacer from "../../components/Spacer";
 import CarouselC from "../../components/user/carousel/Carousel";
 import Seyahat from "../../components/user/gezilecekyerler/Seyahat";
@@ -7,6 +8,8 @@ import FaQuestion from "../../components/user/sorular/FaQuestion";
 import KampanyaBanner from "../../components/user/KampanyaBanner";
 
 const HomePage = () => {
+ 
+
   return (
     <div className="">
       <KampanyaBanner />
@@ -18,8 +21,10 @@ const HomePage = () => {
       <Spacer />
       <Fırsatlar />
       <Spacer />
-      <Seyahat />
-      <Spacer />
+   
+          <Seyahat />
+          <Spacer />
+  
       <FaQuestion />
     </div>
   );

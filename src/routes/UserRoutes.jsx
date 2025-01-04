@@ -17,6 +17,7 @@ import OdemePage from "../pages/user/OdemePage"
 import BiletBasariliPage from "../pages/user/BiletBasariliPage"
 import Biletlerim from "../pages/user/Biletlerim"
 import ProfilPage from "../pages/user/ProfilPage"
+import SeyahatItem from "../components/user/gezilecekyerler/SeyahatItem"
 
 
 const userRoutes = [
@@ -41,6 +42,7 @@ const userRoutes = [
           { path: "odeme/:seferId", element: <OdemePage /> },
           { path: "bilet-basarili", element: <BiletBasariliPage /> },
           { path: "biletlerim", element: <Biletlerim /> },
+          { path: "gezilecek-yerler/:id", element: <SeyahatItem /> },
 
           { path: "*", element: <NotFound /> },
         ],

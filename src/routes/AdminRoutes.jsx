@@ -12,7 +12,7 @@ const SeferlerPage = lazy(()=>import("../pages/admin/Seferler"))
 const TripsPage = lazy(()=>import("../pages/admin/Trips"))
 const UsersPage = lazy(()=>import("../pages/admin/Users"))
 const NotFound = lazy(()=>import("../pages/NotFound"))
-
+const GezilecekYerler = lazy(()=>import("../components/admin/gezilecekyerler/GezilecekYerler"))
 const adminRoutes = [
     {
         path: "/admin",
@@ -31,6 +31,7 @@ const adminRoutes = [
           {path: "biletler", element:<Suspense fallback={<Spin/>}><Biletler/></Suspense>},
           {path:"gelir",element:<Suspense fallback={<Spin/>}><GelirPage/></Suspense>},
           {path:"mesajlar",element:<Suspense fallback={<Spin/>}><Messages/></Suspense>},
+          {path:"gezilecek-yerler",element:<Suspense fallback={<Spin/>}><GezilecekYerler/></Suspense>},
           { path: "*", element: <NotFound /> },
         ],
       },

@@ -14,6 +14,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Badge } from "antd";
 import { fetchMessages } from "../../../redux/slices/messageSlice";
+import { FaLocationDot } from "react-icons/fa6";
 
 const Sidebar = ({ isMobile }) => {
   const [isOpen, setIsOpen] = useState(!isMobile);
@@ -119,6 +120,15 @@ const Sidebar = ({ isMobile }) => {
               style={{ backgroundColor: "#52c41a" }}
               className="ml-2"
             />
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/admin/gezilecek-yerler"
+            className="flex items-center hover:bg-gray-700 p-2 rounded"
+          >
+            <FaLocationDot className={`text-xl ${isMobile ? "" : "block"}`} />
+            {(isOpen || isMobile) && <span className="ml-3">Gezilecek Yerler</span>}
           </Link>
         </li>
 
