@@ -65,7 +65,7 @@ const SatisGrafigi = () => {
         setChartData(gunlukVeriler);
         setLoading(false);
       } catch (error) {
-        console.error("Veri yükleme hatası:", error);
+        toast.error("Satış grafiği yüklenirken bir hata oluştu");
         setLoading(false);
       }
     };

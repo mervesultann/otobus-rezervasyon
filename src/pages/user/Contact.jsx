@@ -52,14 +52,14 @@ const ContactPage = () => {
           "OjA-ldO2mo-Pmy7tf" // EmailJS Public Key
         );
       } catch (emailError) {
-        console.error("Email gönderme hatası:", emailError);
+      toast.error(emailError.message || "Email gönderimi sırasında bir hata oluştu");
        
       }
 
      
       reset();
     } catch (error) {
-      console.error("Mesaj gönderme hatası:", error);
+    
       toast.error("Mesaj gönderilirken bir hata oluştu");
     }
   };

@@ -25,6 +25,7 @@ import {
 import dayjs from "dayjs";
 import locale from "antd/es/date-picker/locale/tr_TR";
 import SeferBiletleri from "./SeferBiletleri";
+import toast from "react-hot-toast";
 
 const Seferler = () => {
   const [seferler, setSeferler] = useState([]);
@@ -41,7 +42,7 @@ const Seferler = () => {
       const data = await getSeferler();
       setSeferler(data);
     } catch (error) {
-      console.error("Seferler yüklenirken hata:", error);
+      toast.error(error.message || "Seferler yüklenirken bir hata oluştu");
     } finally {
       setLoading(false);
     }
@@ -64,7 +65,7 @@ const Seferler = () => {
         createdAt: new Date().toISOString(),
       };
 
-      console.log("Kaydedilecek sefer:", seferData);
+    
 
       if (editingSefer) {
         await updateSefer(editingSefer.id, seferData);
@@ -76,7 +77,7 @@ const Seferler = () => {
       form.resetFields();
       fetchSeferler();
     } catch (error) {
-      console.error("Sefer eklenirken/güncellenirken hata:", error);
+      toast.error(error.message || "Sefer eklenirken/güncellenirken bir hata oluştu");
     }
   };
 
@@ -85,7 +86,7 @@ const Seferler = () => {
       await deleteSefer(id);
       fetchSeferler();
     } catch (error) {
-      console.error("Sefer silinirken hata:", error);
+      toast.error(error.message || "Sefer silinirken bir hata oluştu");
     }
   };
 

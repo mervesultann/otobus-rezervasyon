@@ -24,6 +24,7 @@ import { getAllBiletler } from "../../services/biletService";
 import dayjs from "dayjs";
 import SatisGrafigi from "../../components/admin/dashboard/SatisGrafigi";
 import PopulerRotalar from "../../components/admin/dashboard/PopulerRotalar";
+import toast from "react-hot-toast";
 
 const AdminDashboardPage = () => {
   const [istatistikler, setIstatistikler] = useState({
@@ -85,7 +86,7 @@ const AdminDashboardPage = () => {
           uyeler: [],
         });
       } catch (error) {
-        console.error("Veri yükleme hatası:", error);
+      toast.error(error.message || "Veri yükleme hatası");
       }
     };
 

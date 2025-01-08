@@ -26,7 +26,7 @@ const ProfilPage = () => {
           });
         }
       } catch (error) {
-        console.error("Öğrenci bilgileri yüklenirken hata:", error);
+       toast.error(error.message || "Öğrenci bilgileri yüklenirken bir hata oluştu");
       }
     };
 
@@ -47,7 +47,7 @@ const ProfilPage = () => {
 
       toast.success("Öğrenci bilgileriniz başarıyla kaydedildi");
     } catch (error) {
-      console.error("Öğrenci durumu güncelleme hatası:", error);
+      toast.error(error.message || "Öğrenci bilgileri güncellenirken bir hata oluştu");
       toast.error(
         error.message || "Öğrenci bilgileri güncellenirken bir hata oluştu"
       );

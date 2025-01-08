@@ -23,7 +23,7 @@ const SeferSearch = () => {
         const data = await getSehirler();
         setSehirler(data);
       } catch (error) {
-        console.error('Şehirler yüklenirken hata:', error);
+        
         toast.error('Şehirler yüklenirken bir hata oluştu');
       } finally {
         setSehirlerLoading(false);
@@ -53,7 +53,7 @@ const SeferSearch = () => {
         }
       });
     } catch (error) {
-      console.error('Sefer arama hatası:', error);
+      
       toast.error('Sefer aranırken bir hata oluştu');
     } finally {
       setLoading(false);

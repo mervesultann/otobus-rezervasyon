@@ -5,6 +5,7 @@ import { showModal, hideModal } from "../../redux/slices/kampanyaBannerSlice";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { FaPercent, FaTicket, FaGift } from "react-icons/fa6";
+import toast from "react-hot-toast";
 
 const KampanyaBanner = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const KampanyaBanner = () => {
         }));
         setCampaigns(kampanyaData);
       } catch (error) {
-        console.error("Kampanyalar yüklenirken hata:", error);
+       toast.error(error.message || "Kampanyalar yüklenirken bir hata oluştu");
       } finally {
         setLoading(false);
       }

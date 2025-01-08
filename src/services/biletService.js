@@ -45,7 +45,7 @@ export const addBilet = async (biletData) => {
       ...biletDoc.data(),
     };
   } catch (error) {
-    console.error("Bilet kaydetme hatası:", error);
+    toast.error(error.message || "Bilet kaydedilemedi");
     throw error;
   }
 };
@@ -91,7 +91,7 @@ export const getAllBiletler = async () => {
 
     return biletler;
   } catch (error) {
-    console.error("Biletler getirilirken hata:", error);
+    toast.error(error.message || "Biletler yüklenirken bir hata oluştu");
     throw error;
   }
 };
@@ -106,7 +106,7 @@ export const createBilet = async (biletData) => {
     });
     return { ...biletData, id: biletRef.id, biletNo };
   } catch (error) {
-    console.error("Bilet oluşturulurken hata:", error);
+    toast.error(error.message || "Bilet oluşturulurken bir hata oluştu");
     throw error;
   }
 };
@@ -123,7 +123,7 @@ export const checkKoltukDurumu = async (seferId, koltukNo) => {
     const koltuklar = seferDoc.data()?.koltuklar || {};
     return koltuklar[koltukNo] || { dolu: false };
   } catch (error) {
-    console.error("Koltuk durumu kontrol hatası:", error);
+    toast.error(error.message || "Koltuk durumu kontrol hatası");
     throw error;
   }
 };
@@ -137,7 +137,7 @@ export const iptalBilet = async (biletId) => {
     });
     return true;
   } catch (error) {
-    console.error("Bilet iptal hatası:", error);
+    toast.error(error.message || "Bilet iptal hatası");
     throw error;
   }
 };
@@ -191,7 +191,7 @@ export const updateBilet = async (biletId, yeniBiletData) => {
     const guncelBiletDoc = await getDoc(biletRef);
     return { id: biletId, ...guncelBiletDoc.data() };
   } catch (error) {
-    console.error("Bilet güncelleme hatası:", error);
+    toast.error(error.message || "Bilet güncellenirken bir hata oluştu");
     throw error;
   }
 };
@@ -222,7 +222,7 @@ export const deleteBilet = async (biletId) => {
     await deleteDoc(biletRef);
     return biletId;
   } catch (error) {
-    console.error("Bilet silme hatası:", error);
+    toast.error(error.message || "Bilet silinirken bir hata oluştu");
     throw error;
   }
 };

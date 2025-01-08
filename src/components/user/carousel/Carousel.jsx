@@ -3,7 +3,7 @@ import SeferSearch from '../../form/SeferSearch';
 
 const CarouselC = () => {
   const onChange = (currentSlide) => {
-    //console.log(currentSlide);
+   
   };
   return (
     <div className='relative w-full'>

@@ -55,12 +55,12 @@ export const deleteSefer = async (seferId) => {
 export const searchSeferler = async (searchData) => {
   try {
     const { kalkis, varis, tarih } = searchData;
-    console.log('Arama kriterleri:', { kalkis, varis, tarih });
+    
 
     // Önce tüm seferleri getirelim ve debug edelim
     const allSefersQuery = query(collection(db, "seferler"));
     const allSefers = await getDocs(allSefersQuery);
-    console.log('Tüm seferler:', allSefers.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    //console.log('Tüm seferler:', allSefers.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 
     // Şimdi filtreleme yapalım
     const q = query(
@@ -73,14 +73,14 @@ export const searchSeferler = async (searchData) => {
     const querySnapshot = await getDocs(q);
     const seferler = querySnapshot.docs.map((doc) => {
       const data = doc.data();
-      console.log('Bulunan sefer verisi:', { id: doc.id, ...data });
+      
       return {
         id: doc.id,
         ...data
       };
     });
 
-    console.log('Filtrelenmiş seferler:', seferler);
+    
     
     if (seferler.length === 0) {
       toast.error("Bu kriterlere uygun sefer bulunamadı");
@@ -90,7 +90,7 @@ export const searchSeferler = async (searchData) => {
 
     return seferler;
   } catch (error) {
-    console.error('Sefer arama hatası:', error);
+    
     toast.error("Seferler aranırken bir hata oluştu");
     throw error;
   }

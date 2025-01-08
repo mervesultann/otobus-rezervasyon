@@ -61,7 +61,7 @@ export const getUserById = async (userId) => {
 
     return { id: userDoc.id, ...userDoc.data() };
   } catch (error) {
-    console.error("Kullanıcı bilgileri alma hatası:", error);
+    toast.error(error.message || "Kullanıcı bilgileri alma hatası");
     throw error;
   }
 };
@@ -90,7 +90,7 @@ export const updateUser = async (userId, userData) => {
 
     toast.success("Kullanıcı başarıyla güncellendi");
   } catch (error) {
-    console.error("Kullanıcı güncelleme hatası:", error);
+    
     toast.error("Kullanıcı güncellenirken bir hata oluştu");
     throw error;
   }
@@ -170,7 +170,7 @@ export const updateOgrenciDurumu = async (userId, ogrenciBilgileri) => {
 
     return true;
   } catch (error) {
-    console.error("Öğrenci durumu güncelleme hatası:", error);
+    toast.error(error.message || "Öğrenci bilgileri güncellenirken bir hata oluştu");
     throw error;
   }
 };

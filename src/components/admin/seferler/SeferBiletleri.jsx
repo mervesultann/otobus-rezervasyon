@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal, Table, Tag, Descriptions } from "antd";
 import { getSeferBiletler } from "../../../services/biletService";
 import dayjs from "dayjs";
+import toast from "react-hot-toast";
 
 const SeferBiletleri = ({ seferId, visible, onClose }) => {
   const [biletler, setBiletler] = useState([]);
@@ -14,7 +15,7 @@ const SeferBiletleri = ({ seferId, visible, onClose }) => {
           const data = await getSeferBiletler(seferId);
           setBiletler(data);
         } catch (error) {
-          console.error("Hata:", error);
+          toast.error(error.message || "Biletler yüklenirken bir hata oluştu");
         } finally {
           setLoading(false);
         }

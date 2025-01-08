@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import GelirGrafigi from "./GelirGrafigi";
 import AylikGelirTablosu from "./AylikGelirTablosu";
 import GunlukGelirOzeti from "./GunlukGelirOzeti";
+import toast from "react-hot-toast";
 
 const { RangePicker } = DatePicker;
 
@@ -51,7 +52,7 @@ const Gelir = () => {
         filtrelenmisVeriler: biletler,
       });
     } catch (error) {
-      console.error("Gelir verileri yüklenirken hata:", error);
+      toast.error(error.message || "Gelir verileri yüklenirken bir hata oluştu");
     } finally {
       setLoading(false);
     }

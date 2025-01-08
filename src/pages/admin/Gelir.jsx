@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import GelirGrafigi from "../../components/admin/gelir/GelirGrafigi";
 import AylikGelirTablosu from "../../components/admin/gelir/AylikGelirTablosu";
 import GunlukGelirOzeti from "../../components/admin/gelir/GunlukGelirOzeti";
+import toast from "react-hot-toast";
 
 const GelirPage = () => {
   const [gelirVerileri, setGelirVerileri] = useState({
@@ -52,7 +53,7 @@ const GelirPage = () => {
         filtrelenmisVeriler: biletler,
       });
     } catch (error) {
-      console.error("Gelir verileri yüklenirken hata:", error);
+    toast.error(error.message || "Gelir verileri yüklenirken bir hata oluştu");
     } finally {
       setLoading(false);
     }

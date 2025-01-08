@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Spin } from "antd";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../redux/slices/authSlice";
+import toast from "react-hot-toast";
 
 
 
@@ -62,7 +63,7 @@ const RegisterForm = () => {
       })).unwrap();
       navigate("/");
     } catch (error) {
-      console.error("Kayıt hatası:", error);
+      toast.error(error.message || "Kayıt yapılırken bir hata oluştu");
     } finally {
       setIsLoading(false);
     }

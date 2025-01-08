@@ -11,7 +11,7 @@ export const addSubscriber = async (email) => {
     toast.success("Bültene başarıyla abone oldunuz");
     return docRef.id;
   } catch (error) {
-    console.error("Abonelik hatası:", error);
+  
     toast.error("Abonelik işlemi başarısız oldu");
     throw error;
   }
@@ -25,7 +25,7 @@ export const getSubscribers = async () => {
       ...doc.data(),
     }));
   } catch (error) {
-    console.error("Aboneleri getirme hatası:", error);
+    toast.error(error.message || "Aboneleri getirme hatası");
     throw error;
   }
 };
@@ -35,7 +35,7 @@ export const deleteSubscriber = async (id) => {
     await deleteDoc(doc(db, "subscribers", id));
     toast.success("Abone başarıyla silindi");
   } catch (error) {
-    console.error("Abone silme hatası:", error);
+   
     toast.error("Abone silinirken bir hata oluştu");
     throw error;
   }

@@ -27,7 +27,7 @@ const Footer = () => {
       await addSubscriber(email);
       setEmail("");
     } catch (error) {
-      console.error("Abonelik hatası:", error);
+      toast.error(error.message || "Abonelik hatası");
     } finally {
       setLoading(false);
     }

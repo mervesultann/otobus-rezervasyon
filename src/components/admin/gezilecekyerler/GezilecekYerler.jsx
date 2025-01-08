@@ -34,7 +34,7 @@ const validateImageUrl = (url) => {
     }
     return true;
   } catch (error) {
-    console.error("URL doğrulama hatası:", error);
+    
     toast.error("URL doğrulanırken bir hata oluştu");
     return false;
   }
@@ -76,7 +76,7 @@ const GezilecekYerler = () => {
       form.resetFields();
       setOnemliNoktalar([{ ad: "", aciklama: "" }]);
     } catch (error) {
-      console.error("Form işlemi hatası:", error);
+     toast.error(error.message || "Yer eklemek için bir hata oluştu");
     }
   };
 
@@ -98,7 +98,7 @@ const GezilecekYerler = () => {
       await dispatch(deleteYer(id));
       toast.success("Gezilecek yer başarıyla silindi");
     } catch (error) {
-      console.error("Silme hatası:", error);
+     
       toast.error("Silme işlemi başarısız oldu");
     }
   };

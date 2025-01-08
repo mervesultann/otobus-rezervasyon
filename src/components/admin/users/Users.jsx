@@ -23,7 +23,7 @@ const Users = () => {
       }));
       setUsers(formattedUsers);
     } catch (error) {
-      console.error('Kullanıcılar yüklenirken hata:', error);
+      
       toast.error('Kullanıcılar yüklenirken bir hata oluştu');
     } finally {
       setLoading(false);
@@ -51,7 +51,7 @@ const Users = () => {
       form.resetFields();
       fetchUsers();
     } catch (error) {
-      console.error('Kullanıcı güncellenirken hata:', error);
+      toast.error(error.message || "Kullanıcı güncellenirken bir hata oluştu");
     }
   };
 
@@ -60,7 +60,7 @@ const Users = () => {
       await deleteUser(userId);
       fetchUsers();
     } catch (error) {
-      console.error('Kullanıcı silinirken hata:', error);
+      toast.error(error.message || "Kullanıcı silinirken bir hata oluştu");
     }
   };
 

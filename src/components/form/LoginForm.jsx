@@ -46,7 +46,7 @@ const LoginForm = () => {
      
       navigate("/");
     } catch (error) {
-      console.log(error);
+      toast.error(error.message || "Giriş yapılırken bir hata oluştu");
     } finally {
       setIsLoading(false);
     }

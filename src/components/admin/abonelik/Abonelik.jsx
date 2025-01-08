@@ -14,7 +14,7 @@ const Subscribers = () => {
       const data = await getSubscribers();
       setSubscribers(data);
     } catch (error) {
-      console.error("Aboneler yüklenirken hata:", error);
+      
       toast.error("Aboneler yüklenemedi");
     } finally {
       setLoading(false);
@@ -30,7 +30,7 @@ const Subscribers = () => {
       await deleteSubscriber(id);
       fetchSubscribers();
     } catch (error) {
-      console.error("Silme hatası:", error);
+      toast.error("Aboneyi silmek için bir hata oluştu");
     }
   };
 

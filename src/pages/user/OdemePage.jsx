@@ -136,7 +136,7 @@ const OdemePage = () => {
         },
       });
     } catch (error) {
-      console.error("Ödeme hatası:", error);
+      
 
       if (geciciRezervasyon) {
         try {
@@ -147,7 +147,7 @@ const OdemePage = () => {
             biletId: null,
           });
         } catch (rezervasyonError) {
-          console.error("Rezervasyon iptal hatası:", rezervasyonError);
+          toast.error(rezervasyonError.message || "Rezervasyon iptal hatası");
         }
       }
 
@@ -182,7 +182,7 @@ const OdemePage = () => {
         );
       }
     } catch (error) {
-      console.error("Kampanya kodu hatası:", error);
+     toast.error(error.message || "Kampanya kodu hatası");
     }
   };
 

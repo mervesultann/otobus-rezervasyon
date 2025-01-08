@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { getUserBiletler } from "../../services/biletService";
 import BiletYazdir from "../../components/user/BiletYazdir";
 import { useMediaQuery } from "react-responsive";
+import toast from "react-hot-toast";
 
 const Biletlerim = () => {
   const [biletler, setBiletler] = useState([]);
@@ -36,7 +37,7 @@ const Biletlerim = () => {
         });
         setBiletler(sortedBiletler);
       } catch (error) {
-        console.error("Hata:", error);
+      toast.error(error.message || "Biletler yüklenirken bir hata oluştu");
       } finally {
         setLoading(false);
       }

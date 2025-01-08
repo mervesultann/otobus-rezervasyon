@@ -276,7 +276,7 @@ const Biletler = () => {
       // Biletleri yeniden yükle
       dispatch(fetchBiletler());
     } catch (error) {
-      console.error("Güncelleme hatası:", error);
+      
       toast.error(error.message || "Bilet güncellenirken bir hata oluştu");
     }
   };
@@ -300,7 +300,7 @@ const Biletler = () => {
           })
         ).unwrap();
       } catch (error) {
-        console.error("Bilet güncelleme hatası:", error);
+        toast.error("Bilet görüntülenirken bir hata oluştu");
       }
     }
   };

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaPercent, FaTicket, FaGift } from "react-icons/fa6";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../config/firebase";
+import toast from "react-hot-toast";
 
 const Fırsatlar = () => {
   const [campaigns, setCampaigns] = useState([]);
@@ -25,7 +26,7 @@ const Fırsatlar = () => {
         }));
         setCampaigns(kampanyaData);
       } catch (error) {
-        console.error("Kampanyalar yüklenirken hata:", error);
+        toast.error(error.message || "Kampanyalar yüklenirken bir hata oluştu");
       } finally {
         setLoading(false);
       }

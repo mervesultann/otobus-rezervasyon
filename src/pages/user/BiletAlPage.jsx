@@ -60,7 +60,7 @@ const BiletAlPage = () => {
         },
       });
     } catch (error) {
-      console.error("Hata:", error);
+      
       toast.error("İşlem sırasında bir hata oluştu");
     }
   };

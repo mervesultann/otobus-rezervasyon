@@ -22,7 +22,7 @@ const UserProfile = () => {
           tel: userData.tel || ''
         });
       } catch (error) {
-        console.error("Kullanıcı bilgileri alınamadı:", error);
+        
         toast.error("Kullanıcı bilgileri yüklenirken bir hata oluştu");
       }
     };
@@ -46,7 +46,7 @@ const UserProfile = () => {
       
       toast.success("Profil bilgileri başarıyla güncellendi");
     } catch (error) {
-      console.error("Profil güncelleme hatası:", error);
+      
       toast.error("Profil güncellenirken bir hata oluştu");
     } finally {
       setLoading(false);

@@ -21,7 +21,7 @@ export const getGezilecekYerler = async () => {
       ...doc.data(),
     }));
   } catch (error) {
-    console.error("Gezilecek yerler getirme hatası:", error);
+    
     toast.error("Gezilecek yerler yüklenirken bir hata oluştu");
     throw error;
   }
@@ -39,7 +39,7 @@ export const getGezilecekYerById = async (id) => {
     }
     return null;
   } catch (error) {
-    console.error("Gezilecek yer getirme hatası:", error);
+    
     toast.error("Gezilecek yer detayı yüklenirken bir hata oluştu");
     throw error;
   }
@@ -55,7 +55,7 @@ export const addGezilecekYer = async (yerData) => {
     toast.success("Gezilecek yer başarıyla eklendi");
     return { id: docRef.id, ...yerData };
   } catch (error) {
-    console.error("Gezilecek yer ekleme hatası:", error);
+    
     toast.error("Gezilecek yer eklenirken bir hata oluştu");
     throw error;
   }
@@ -70,7 +70,7 @@ export const updateGezilecekYer = async (id, yerData) => {
     });
     toast.success("Gezilecek yer başarıyla güncellendi");
   } catch (error) {
-    console.error("Gezilecek yer güncelleme hatası:", error);
+    
     toast.error("Gezilecek yer güncellenirken bir hata oluştu");
     throw error;
   }
@@ -84,7 +84,7 @@ export const toggleGezilecekYerDurum = async (id, aktif) => {
       `Gezilecek yer ${aktif ? "aktif" : "pasif"} duruma getirildi`
     );
   } catch (error) {
-    console.error("Durum güncelleme hatası:", error);
+    
     toast.error("Durum güncellenirken bir hata oluştu");
     throw error;
   }
@@ -96,7 +96,7 @@ export const deleteGezilecekYer = async (id) => {
     await deleteDoc(yerRef);
     toast.success("Gezilecek yer başarıyla silindi");
   } catch (error) {
-    console.error("Gezilecek yer silme hatası:", error);
+    
     toast.error("Gezilecek yer silinirken bir hata oluştu");
     throw error;
   }

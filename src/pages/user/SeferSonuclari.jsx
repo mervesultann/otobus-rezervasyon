@@ -36,7 +36,7 @@ const SeferSonuclari = () => {
       setLoading(true);
       try {
         const tumSeferler = await getSeferler();
-        console.log("Tüm seferler:", tumSeferler);
+       toast.success("Seferler yüklendi");
 
         if (!tumSeferler) {
           throw new Error("Sefer verileri boş geldi");
@@ -125,7 +125,7 @@ const SeferSonuclari = () => {
           setAlternatifSeferler(gelecekSeferler);
         }
       } catch (error) {
-        console.error("Sefer arama hatası:", error);
+        
         message.error("Seferler yüklenirken bir hata oluştu");
       } finally {
         setLoading(false);

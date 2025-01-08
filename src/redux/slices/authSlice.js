@@ -32,7 +32,7 @@ export const registerUser = createAsyncThunk(
           displayName: name
         });
       } catch (profileError) {
-        console.error("Profile güncelleme hatası:", profileError);
+      toast.error(profileError.message || "Profil bilgileri güncellenirken bir hata oluştu");
       }
 
       const userData = {

@@ -75,6 +75,6 @@ export const saveKullanılanKampanya = async (kampanyaId, userId, biletId) => {
       kullanımTarihi: new Date(),
     });
   } catch (error) {
-    console.error("Kampanya kullanım kaydı hatası:", error);
+    toast.error(error.message || "Kampanya kullanım kaydı hatası");
   }
 };
