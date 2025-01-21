@@ -151,7 +151,7 @@ const BiletYazdir = ({ bilet, visible, onClose }) => {
 
           <div className="mt-8 flex flex-col items-center space-y-4">
             <QRCodeSVG
-              value={`BILET-${bilet?.id}`}
+              value={bilet?.biletNo || bilet?.id}
               size={120}
               className="p-2 bg-white rounded-lg shadow-sm"
             />
