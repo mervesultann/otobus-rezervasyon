@@ -3,6 +3,7 @@ import { Modal, Table, Tag, Descriptions } from "antd";
 import { getSeferBiletler } from "../../../services/biletService";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
+import PropTypes from "prop-types";
 
 const SeferBiletleri = ({ seferId, visible, onClose }) => {
   const [biletler, setBiletler] = useState([]);
@@ -35,8 +36,10 @@ const SeferBiletleri = ({ seferId, visible, onClose }) => {
           <Descriptions.Item label="Ad Soyad">
             {yolcu.ad} {yolcu.soyad}
           </Descriptions.Item>
-          <Descriptions.Item label="T.C. No">{yolcu.tcno}</Descriptions.Item>
-          <Descriptions.Item label="Cinsiyet">
+          <Descriptions.Item label="T.C. No" className="hidden sm:block">
+            {yolcu.tcno}
+          </Descriptions.Item>
+          <Descriptions.Item label="Cinsiyet" className="hidden sm:block">
             {yolcu.cinsiyet === "K" ? "Kadın" : "Erkek"}
           </Descriptions.Item>
         </Descriptions>
@@ -52,6 +55,7 @@ const SeferBiletleri = ({ seferId, visible, onClose }) => {
       title: "Satın Alma Tarihi",
       dataIndex: "createdAt",
       key: "createdAt",
+      responsive: ["md"],
       render: (tarih) => {
         if (!tarih) return "-";
         const date = tarih?.toDate ? tarih.toDate() : new Date(tarih);
@@ -65,7 +69,8 @@ const SeferBiletleri = ({ seferId, visible, onClose }) => {
       title="Sefer Biletleri"
       open={visible}
       onCancel={onClose}
-      width={800}
+      width="95%"
+      style={{ maxWidth: "800px" }}
       footer={null}
     >
       <Table
@@ -74,9 +79,17 @@ const SeferBiletleri = ({ seferId, visible, onClose }) => {
         rowKey="id"
         loading={loading}
         pagination={false}
+        scroll={{ x: true }}
+        className="overflow-x-auto"
       />
     </Modal>
   );
 };
 
-export default SeferBiletleri; 
+SeferBiletleri.propTypes = {
+  seferId: PropTypes.string,
+  visible: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+
+export default SeferBiletleri;

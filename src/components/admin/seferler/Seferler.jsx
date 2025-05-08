@@ -121,16 +121,19 @@ const Seferler = () => {
       title: "Tarih",
       dataIndex: "tarih",
       key: "tarih",
+      responsive: ["md"],
     },
     {
       title: "Kalkış Saati",
       dataIndex: "kalkisSaati",
       key: "kalkisSaati",
+      responsive: ["md"],
     },
     {
       title: "Varış Saati",
       dataIndex: "varisSaati",
       key: "varisSaati",
+      responsive: ["md"],
     },
     {
       title: "Fiyat",
@@ -139,15 +142,16 @@ const Seferler = () => {
       render: (fiyat) => `₺${fiyat.toFixed(2)}`,
     },
     {
-      title: "Koltuk Sayısı",
+      title: "Koltuk",
       dataIndex: "koltukSayisi",
       key: "koltukSayisi",
+      responsive: ["lg"],
     },
     {
       title: "İşlemler",
       key: "actions",
       render: (_, record) => (
-        <div className="space-x-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             type="primary"
             icon={<EditOutlined />}
@@ -161,8 +165,9 @@ const Seferler = () => {
               });
               setModalVisible(true);
             }}
+            size="middle"
           >
-            Düzenle
+            <span className="hidden sm:inline-block">Düzenle</span>
           </Button>
           <Button
             onClick={() => {
@@ -170,8 +175,9 @@ const Seferler = () => {
               setBiletlerVisible(true);
             }}
             icon={<EyeOutlined />}
+            size="middle"
           >
-            Biletler
+            <span className="hidden sm:inline-block">Biletler</span>
           </Button>
           <Popconfirm
             title="Seferi silmek istediğinize emin misiniz?"
@@ -179,8 +185,13 @@ const Seferler = () => {
             okText="Evet"
             cancelText="Hayır"
           >
-            <Button type="primary" danger icon={<DeleteOutlined />}>
-              Sil
+            <Button
+              type="primary"
+              danger
+              icon={<DeleteOutlined />}
+              size="middle"
+            >
+              <span className="hidden sm:inline-block">Sil</span>
             </Button>
           </Popconfirm>
         </div>
@@ -189,9 +200,9 @@ const Seferler = () => {
   ];
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Seferler</h1>
+    <div className="p-2 sm:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-0">Seferler</h1>
         <Button
           type="primary"
           icon={<PlusOutlined />}
@@ -200,6 +211,7 @@ const Seferler = () => {
             form.resetFields();
             setModalVisible(true);
           }}
+          className="w-full sm:w-auto"
         >
           Yeni Sefer Ekle
         </Button>
@@ -210,6 +222,13 @@ const Seferler = () => {
         dataSource={seferler}
         rowKey="id"
         loading={loading}
+        scroll={{ x: true }}
+        responsive={["sm", "md", "lg", "xl"]}
+        pagination={{
+          responsive: true,
+          pageSize: 5,
+        }}
+        className="overflow-x-auto"
       />
 
       <Modal
@@ -220,6 +239,8 @@ const Seferler = () => {
           form.resetFields();
         }}
         footer={null}
+        width="95%"
+        style={{ maxWidth: "600px" }}
       >
         <Form
           form={form}

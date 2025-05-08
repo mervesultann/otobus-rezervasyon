@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom"
 import Sidebar from "../components/admin/Dashboard-Home/Sidebar"
 import { useState, useEffect } from "react"
+import Footer from "../components/user/footer/Footer";
 
 const AdminLayout = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -22,6 +23,7 @@ const AdminLayout = () => {
           <Outlet />
         </div>
       </main>
+      
     </div>
   )
 }
