@@ -8,7 +8,7 @@ import {
   DatePicker,
   TimePicker,
   Popconfirm,
-  message,
+  Select,
 } from "antd";
 import {
   EditOutlined,
@@ -21,6 +21,7 @@ import {
   addSefer,
   updateSefer,
   deleteSefer,
+  getSehirler,
 } from "../../../services/seferlerService";
 import dayjs from "dayjs";
 import locale from "antd/es/date-picker/locale/tr_TR";
@@ -35,6 +36,8 @@ const Seferler = () => {
   const [form] = Form.useForm();
   const [selectedSefer, setSelectedSefer] = useState(null);
   const [biletlerVisible, setBiletlerVisible] = useState(false);
+  const [sehirler, setSehirler] = useState([]);
+  const [sehirlerLoading, setSehirlerLoading] = useState(false);
 
   const fetchSeferler = async () => {
     setLoading(true);
@@ -48,8 +51,21 @@ const Seferler = () => {
     }
   };
 
+  const fetchSehirler = async () => {
+    setSehirlerLoading(true);
+    try {
+      const data = await getSehirler();
+      setSehirler(data);
+    } catch (error) {
+      toast.error(error.message || "Şehirler yüklenirken bir hata oluştu");
+    } finally {
+      setSehirlerLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchSeferler();
+    fetchSehirler();
   }, []);
 
   const handleAddEdit = async (values) => {
@@ -65,8 +81,6 @@ const Seferler = () => {
         createdAt: new Date().toISOString(),
       };
 
-    
-
       if (editingSefer) {
         await updateSefer(editingSefer.id, seferData);
       } else {
@@ -77,7 +91,9 @@ const Seferler = () => {
       form.resetFields();
       fetchSeferler();
     } catch (error) {
-      toast.error(error.message || "Sefer eklenirken/güncellenirken bir hata oluştu");
+      toast.error(
+        error.message || "Sefer eklenirken/güncellenirken bir hata oluştu"
+      );
     }
   };
 
@@ -218,7 +234,21 @@ const Seferler = () => {
             label="Kalkış"
             rules={[{ required: true, message: "Kalkış noktası zorunludur!" }]}
           >
-            <Input placeholder="Örn: İstanbul" />
+            <Select
+              placeholder="Kalkış şehri seçin"
+              loading={sehirlerLoading}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().includes(input.toLowerCase())
+              }
+            >
+              {sehirler.map((sehir) => (
+                <Select.Option key={sehir.id} value={sehir.ad}>
+                  {sehir.ad}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
@@ -226,7 +256,21 @@ const Seferler = () => {
             label="Varış"
             rules={[{ required: true, message: "Varış noktası zorunludur!" }]}
           >
-            <Input placeholder="Örn: Ankara" />
+            <Select
+              placeholder="Varış şehri seçin"
+              loading={sehirlerLoading}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().includes(input.toLowerCase())
+              }
+            >
+              {sehirler.map((sehir) => (
+                <Select.Option key={sehir.id} value={sehir.ad}>
+                  {sehir.ad}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
